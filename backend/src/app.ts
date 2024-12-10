@@ -13,9 +13,3 @@ app.use(express.json());
 
 app.use("/patients", patientRouter);
 app.use("/encounters", encounterRouter);
-
-app.post("/", (req, res) => {
-    const { name, age } = req.body;
-    console.log(name, age);
-    res.send(req.body);
-});

@@ -54,7 +54,7 @@ export const getEncounterByTransactionNumber = async (
     }
 };
 
-// [POST] /encounters - สร้างข้อมูลการเยี่ยมชมใหม่
+// [POST] /encounters
 export const createEncounter = async (req: Request, res: Response) => {
     const {
         transactionNumber,
@@ -94,7 +94,7 @@ export const createEncounter = async (req: Request, res: Response) => {
     }
 };
 
-// [PUT] /encounters/:transactionNumber - อัปเดตข้อมูลการเยี่ยมชม
+// [PUT] /encounters/:transactionNumber
 export const updateEncounter = async (req: Request, res: Response) => {
     const { transactionNumber } = req.params;
     const { transactionNumber: bodyTransactionNumber, ...updates } = req.body;
