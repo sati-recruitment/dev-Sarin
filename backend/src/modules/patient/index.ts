@@ -1,3 +1,24 @@
 import { Router } from "express";
+import * as patientController from "./patient.controller";
 
 export const patientRouter = Router();
+
+// [GET] /patients/
+patientRouter.get("/", patientController.getAllPatients);
+
+// [GET] /patients/:hospitalNumber
+patientRouter.get(
+    "/:hospitalNumber",
+    patientController.getPatientByHospitalNumber
+);
+
+// [POST] /patients
+patientRouter.post("/", patientController.createPatient);
+
+// [PUT] /patients/:hospitalNumber
+patientRouter.put("/:hospitalNumber", patientController.updatePatient);
+
+// สำหรับกรณีที่ใช้ HTTP Method ที่ไม่รองรับ
+patientRouter.all("/", (req, res) => {
+    res.status(405).json({ error: "Method Not Allowed" });
+});

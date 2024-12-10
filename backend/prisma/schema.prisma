@@ -14,9 +14,7 @@ model patient {
     hospitalNumber String @id
     firstName      String
     lastName       String
-
     birthday DateTime
-
     sex       String // male / female / unspecified
     encounter encounter[]
 }
