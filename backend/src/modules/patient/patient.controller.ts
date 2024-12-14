@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { patientInfo } from "@/dto/patientInfo.dto";
 
 const db = new PrismaClient();
 
@@ -43,7 +44,8 @@ export const getPatientByHospitalNumber = async (
 
 // POST /patients
 export const createPatient = async (req: Request, res: Response) => {
-    const { hospitalNumber, firstName, lastName, birthday, sex } = req.body;
+    const { hospitalNumber, firstName, lastName, birthday, sex }: patientInfo =
+        req.body;
     try {
         const existingPatient = await db.patient.findUnique({
             where: { hospitalNumber },
@@ -80,38 +82,9 @@ export const updatePatient = async (req: Request, res: Response) => {
         lastName,
         birthday,
         sex,
-    } = req.body;
-
-    const requiredKeys = [
-        "hospitalNumber",
-        "firstName",
-        "lastName",
-        "birthday",
-        "sex",
-    ];
-    const bodyKeys = Object.keys(req.body);
-    const hasExtraKeys = bodyKeys.some((key) => !requiredKeys.includes(key));
-    const missingKeys = requiredKeys.filter((key) => !bodyKeys.includes(key));
+    }: patientInfo = req.body;
 
     try {
-        if (hasExtraKeys || missingKeys.length > 0) {
-            return res.status(500).json({
-                error: "Invalid request body",
-                details: {
-                    extraKeys: bodyKeys.filter(
-                        (key) => !requiredKeys.includes(key)
-                    ),
-                    missingKeys,
-                },
-            });
-        }
-
-        if (hospitalNumber !== bodyHospitalNumber) {
-            return res.status(500).json({
-                error: "Hospital number in request body does not match request parameter",
-            });
-        }
-
         const patient = await db.patient.findUnique({
             where: { hospitalNumber },
         });

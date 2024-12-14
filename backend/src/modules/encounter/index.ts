@@ -1,5 +1,9 @@
 import { Router } from "express";
 import * as encounterController from "./encounter.controller";
+import {
+    validateCreateEncounterData,
+    validateUpdateEncounterData,
+} from "../../middlewares/encounter.validation";
 
 export const encounterRouter = Router();
 
@@ -13,10 +17,18 @@ encounterRouter.get(
 );
 
 // [POST] /encounters
-encounterRouter.post("/", encounterController.createEncounter);
+encounterRouter.post(
+    "/",
+    [validateCreateEncounterData],
+    encounterController.createEncounter
+);
 
 // [PUT] /encounters/:transactionNumber
-encounterRouter.put("/:transactionNumber", encounterController.updateEncounter);
+encounterRouter.put(
+    "/:transactionNumber",
+    [validateUpdateEncounterData],
+    encounterController.updateEncounter
+);
 
 // สำหรับกรณีที่ใช้ HTTP Method ที่ไม่รองรับ
 encounterRouter.all("/", (req, res) => {

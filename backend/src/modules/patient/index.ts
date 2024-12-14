@@ -1,5 +1,9 @@
 import { Router } from "express";
 import * as patientController from "./patient.controller";
+import {
+    validateCreatePatientData,
+    validateUpdatePatientData,
+} from "../../middlewares/patient.validation";
 
 export const patientRouter = Router();
 
@@ -13,10 +17,18 @@ patientRouter.get(
 );
 
 // [POST] /patients
-patientRouter.post("/", patientController.createPatient);
+patientRouter.post(
+    "/",
+    [validateCreatePatientData],
+    patientController.createPatient
+);
 
 // [PUT] /patients/:hospitalNumber
-patientRouter.put("/:hospitalNumber", patientController.updatePatient);
+patientRouter.put(
+    "/:hospitalNumber",
+    [validateUpdatePatientData],
+    patientController.updatePatient
+);
 
 // สำหรับกรณีที่ใช้ HTTP Method ที่ไม่รองรับ
 patientRouter.all("/", (req, res) => {

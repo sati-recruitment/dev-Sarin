@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { encounterInfo } from "@/dto/encounterInfo.dto";
 
 const db = new PrismaClient();
 
@@ -99,24 +100,7 @@ export const updateEncounter = async (req: Request, res: Response) => {
     const { transactionNumber } = req.params;
     const { transactionNumber: bodyTransactionNumber, ...updates } = req.body;
 
-    const allowedKeys = [
-        "transactionNumber",
-        "visitDate",
-        "physicalExamination",
-        "diagnosis",
-        "presentIllness",
-        "patientHospitalNumber",
-    ];
-    const bodyKeys = Object.keys(updates);
-    const hasExtraKeys = bodyKeys.some((key) => !allowedKeys.includes(key));
-
     try {
-        if (hasExtraKeys) {
-            return res.status(500).json({
-                error: "Invalid request body",
-            });
-        }
-
         const encounter = await db.encounter.findUnique({
             where: { transactionNumber },
         });
