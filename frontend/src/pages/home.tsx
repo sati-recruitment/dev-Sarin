@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import {
   Box,
   Button,
@@ -9,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import CardList from "../components/cardList";
+import { fetchCats } from "../api/catApi";
 
 const Home = () => {
   const [cats, setCats] = useState([]);
@@ -16,34 +16,23 @@ const Home = () => {
   const [imagesNumber, setImagesNumber] = useState(1);
   const [error, setError] = useState<string | null>(null);
 
-  const apiKey =
-    "live_UMIEHUqwTGnUFY8TiJrv60nSuK36A42ddgNtFcb9YWb4lsQgXUJGvfJ4xcJfnlqA";
-  const apiUrl = "https://api.thecatapi.com/v1/images/search";
+  const handleRandomClick = async () => {
+    if (imagesNumber < 1 || imagesNumber > 10) {
+      setError("Please enter a number between 1 and 10.");
+      return;
+    }
 
-  const fetchCats = async () => {
     setLoading(true);
     setError(null);
+
     try {
-      const response = await axios.get(apiUrl, {
-        params: {
-          limit: imagesNumber,
-          api_key: apiKey,
-        },
-      });
-      setCats(response.data);
+      const data = await fetchCats(imagesNumber);
+      setCats(data);
     } catch (err) {
       setError("Cannot fetch cat images. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleRandomClick = () => {
-    if (imagesNumber < 1 || imagesNumber > 10) {
-      setError("Please enter a number between 1 and 10.");
-      return;
-    }
-    fetchCats();
   };
 
   return (
