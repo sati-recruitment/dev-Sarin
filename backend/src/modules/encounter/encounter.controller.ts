@@ -64,7 +64,10 @@ export const createEncounter = async (req: Request, res: Response) => {
         diagnosis,
         presentIllness,
         patientHospitalNumber,
-    } = req.body;
+    }: encounterInfo = req.body;
+
+    // Reassign to a new variable to handle null assignment
+    let finalPatientHospitalNumber = patientHospitalNumber || "null";
 
     try {
         const existingEncounter = await db.encounter.findUnique({
@@ -84,7 +87,7 @@ export const createEncounter = async (req: Request, res: Response) => {
                 physicalExamination,
                 diagnosis,
                 presentIllness,
-                patientHospitalNumber,
+                patientHospitalNumber: finalPatientHospitalNumber,
             },
         });
 
@@ -98,7 +101,10 @@ export const createEncounter = async (req: Request, res: Response) => {
 // [PUT] /encounters/:transactionNumber
 export const updateEncounter = async (req: Request, res: Response) => {
     const { transactionNumber } = req.params;
-    const { transactionNumber: bodyTransactionNumber, ...updates } = req.body;
+    const {
+        transactionNumber: bodyTransactionNumber,
+        ...updates
+    }: encounterInfo = req.body;
 
     try {
         const encounter = await db.encounter.findUnique({
